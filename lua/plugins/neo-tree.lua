@@ -70,11 +70,11 @@ return {
       source_selector = {
         winbar = true,
         content_layout = "center",
-        tab_labels = {
-          filesystem = get_icon "FolderClosed" .. " File",
-          buffers = get_icon "DefaultFile" .. " Bufs",
-          git_status = get_icon "Git" .. " Git",
-          diagnostics = get_icon "Diagnostic" .. " Diagnostic",
+        sources = {
+          { source = "filesystem", display_name = get_icon "FolderClosed" .. " File", },
+          { source = "buffers", display_name = get_icon "DefaultFile" .. " Bufs", },
+          { source = "git_status", display_name = get_icon "Git" .. " Git", },
+          { source = "diagnostics", display_name = get_icon "Diagnostic" .. " Diagnostic", },
         },
       },
       default_component_configs = {
