@@ -1,14 +1,11 @@
 vim.opt.viewoptions:remove "curdir" -- disable saving current directory with views
 vim.opt.shortmess:append { s = true, I = true } -- disable search count wrap and startup messages
 vim.opt.backspace:append { "nostop" } -- don't stop backspace at insert
-if vim.fn.has "nvim-0.9" == 1 then
-  vim.opt.diffopt:append "linematch:60" -- enable linematch diff algorithm
-end
 local options = astronvim.user_opts("options", {
   opt = {
     breakindent = true, -- wrap indent to match  line start
-    clipboard = "unnamedplus", -- connection to the system clipboard
-    cmdheight = 0, -- hide command line unless needed
+    clipboard = "", -- do not yank / delete to system clipbaord
+    cmdheight = 1, -- 0 => hide command line unless needed
     completeopt = { "menu", "menuone", "noselect" }, -- Options for insert mode completion
     copyindent = true, -- copy the previous indentation on autoindenting
     cursorline = true, -- highlight the text line of the cursor
@@ -28,7 +25,7 @@ local options = astronvim.user_opts("options", {
     number = true, -- show numberline
     preserveindent = true, -- preserve indent structure as much as possible
     pumheight = 10, -- height of the pop up menu
-    relativenumber = true, -- show relative numberline
+    relativenumber = false, -- show relative numberline
     shiftwidth = 2, -- number of space inserted for indentation
     showmode = false, -- disable showing modes in command line
     showtabline = 2, -- always display tabline
@@ -45,6 +42,9 @@ local options = astronvim.user_opts("options", {
     virtualedit = "block", -- allow going past end of line in visual block mode
     wrap = false, -- disable wrapping of lines longer than the width of window
     writebackup = false, -- disable making a backup before overwriting a file
+    list = true,
+    listchars = "tab:>~",
+    diffopt = "internal,filler,closeoff,vertical",
   },
   g = {
     mapleader = " ", -- set leader key
@@ -70,5 +70,8 @@ local options = astronvim.user_opts("options", {
 for scope, table in pairs(options) do
   for setting, value in pairs(table) do
     vim[scope][setting] = value
+  end
+  if vim.fn.has "nvim-0.9" == 1 then
+    vim.opt.diffopt:append "linematch:60" -- enable linematch diff algorithm
   end
 end
