@@ -31,10 +31,11 @@ mv ~/.local/share/nvim ~/.local/share/nvim.bak
 
 ```shell
 git clone https://github.com/lamsyl/AstroNvim ~/.config/nvim
-nvim
 ```
 
-Make a symlink to user config
+Create user config `~/.config/astronvim/lua/user/init.lua` if not present yet
+
+Then make a symlink to the user config
 
 ```shell
 cd ~/.config/nvim/lua/user
@@ -54,6 +55,22 @@ Copy the user config
 ```shell
 cp ~/.config/nvim/lua/user/init.lua ~/.config/astro-stable/lua/user/init.lua
 ```
+
+#### Initial setup
+
+Perform initial setup for both nvim and stable nvim
+
+1. `nvim` or `NVIM_APPNAME=astro-stable nvim`
+2. `:Lazy`
+3. Sync
+4. `:Mason`
+5. Install mason packages
+6. `:TSInstall {lang}` or `:TSInstall all`
+
+Track these files in dotfiles repo
+
+- `~/.config/astronvim/lua/user/init.lua`
+- `~/.local/share/nvim/lazy-lock.json`
 
 ## ⚙️ Config
 
@@ -94,23 +111,37 @@ Once the experimental config becomes stable,
 
 1. Push the experimental main config change to astrofork
 2. Pull the change in `~/.config/astro-stable`
-3. Copy (not symlink) user config to stable user config:
+3. Use dotfiles repo to track `~/.config/astronvim/lua/user/init.lua`
+4. Copy (not symlink) user config to stable user config:
 
-    ```shell
-    cp ~/.config/nvim/lua/user/init.lua ~/.config/astro-stable/lua/user/init.lua
-    ```
-
-4. Use dotfiles repo to track `~/.config/astronvim/lua/user/init.lua`
+```shell
+cp ~/.config/nvim/lua/user/init.lua ~/.config/astro-stable/lua/user/init.lua
+```
 
 #### Update plugins
 
-1. `:Lazy`
-2. Sync, or update individual plugin
+1. `nvim`
+2. `:Lazy`
+3. Sync, or update individual plugin
 
-If stable, use dotfiles repo to track `~/.local/share/nvim/lazy-lock.json`
+If stable,
 
-Otherwise, rollback to previous plugin version
+1. Use dotfiles repo to track `~/.local/share/nvim/lazy-lock.json`
+2. Copy lockfile to stable nvim
+
+```shell
+cp ~/.local/share/nvim/lazy-lock.json ~/.local/share/astro-stable/lazy-lock.json
+```
+
+3. Update stable nvim plugins
+
+```shell
+NVIM_APPNAME=astro-stable nvim -c 'lua require("lazy").restore()'
+```
+
+If broken, rollback
 
 1. Revert `~/.local/share/nvim/lazy-lock.json`
-2. `:Lazy`
-3. Restore
+2. `nvim`
+3. `:Lazy`
+4. Restore
