@@ -12,7 +12,6 @@ local health = {
 function M.check()
   health.start "AstroNvim"
 
-  health.info("AstroNvim Version: " .. require("astronvim.utils.updater").version(true))
   health.info("Neovim Version: v" .. vim.fn.matchstr(vim.fn.execute "version", "NVIM v\\zs[^\n]*"))
 
   if vim.version().prerelease then
@@ -27,7 +26,7 @@ function M.check()
     {
       cmd = { "git" },
       type = "error",
-      msg = "Used for core functionality such as updater and plugin management",
+      msg = "Used for core functionality such as plugin management",
       extra_check = function(program)
         local git_version = require("astronvim.utils.git").git_version()
         if git_version then

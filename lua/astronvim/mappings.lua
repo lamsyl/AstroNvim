@@ -42,12 +42,6 @@ maps.n["<leader>pS"] = { function() require("lazy").sync() end, desc = "Plugins 
 maps.n["<leader>pu"] = { function() require("lazy").check() end, desc = "Plugins Check Updates" }
 maps.n["<leader>pU"] = { function() require("lazy").update() end, desc = "Plugins Update" }
 
--- AstroNvim
-maps.n["<leader>pa"] = { "<cmd>AstroUpdatePackages<cr>", desc = "Update Plugins and Mason Packages" }
-maps.n["<leader>pA"] = { "<cmd>AstroUpdate<cr>", desc = "AstroNvim Update" }
-maps.n["<leader>pv"] = { "<cmd>AstroVersion<cr>", desc = "AstroNvim Version" }
-maps.n["<leader>pl"] = { "<cmd>AstroChangelog<cr>", desc = "AstroNvim Changelog" }
-
 -- Manage Buffers
 maps.n["<leader>c"] = { function() require("astronvim.utils.buffer").close() end, desc = "Close buffer" }
 maps.n["<leader>C"] = { function() require("astronvim.utils.buffer").close(0, true) end, desc = "Force close buffer" }
