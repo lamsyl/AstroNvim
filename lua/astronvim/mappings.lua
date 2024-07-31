@@ -224,6 +224,9 @@ else
   maps.n["<C-Right>"] = { "<cmd>vertical resize +2<CR>", desc = "Resize split right" }
 end
 
+-- Treesitter
+maps.n["[C"] = { function() require("treesitter-context").go_to_context() end, desc = "Go to context" }
+
 -- SymbolsOutline
 if is_available "aerial.nvim" then
   maps.n["<leader>l"] = sections.l
