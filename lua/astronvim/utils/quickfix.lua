@@ -1,5 +1,7 @@
 local M = {}
 
+local tbl = require "astronvim.utils.table"
+
 ---@return table # array of unique filenames in the quickfix list
 function M.get_qf_files()
   local qf_files = {}
@@ -7,7 +9,7 @@ function M.get_qf_files()
     local filename = vim.fn.bufname(d.bufnr)
     qf_files[filename] = 1
   end
-  return get_keys(qf_files)
+  return tbl.get_keys(qf_files)
 end
 
 return M
