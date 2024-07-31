@@ -17,6 +17,7 @@ local sections = {
   g = { desc = get_icon("Git", 1, true) .. "Git" },
   S = { desc = get_icon("Session", 1, true) .. "Session" },
   t = { desc = get_icon("Terminal", 1, true) .. "Terminal" },
+  x = { desc = "Trouble" },
 }
 
 -- Normal --
@@ -232,20 +233,7 @@ end
 -- Telescope
 if is_available "telescope.nvim" then
   maps.n["<leader>f"] = sections.f
-  maps.n["<leader>g"] = sections.g
-  maps.n["<leader>gb"] =
-    { function() require("telescope.builtin").git_branches { use_file_path = true } end, desc = "Git branches" }
-  maps.n["<leader>gc"] = {
-    function() require("telescope.builtin").git_commits { use_file_path = true } end,
-    desc = "Git commits (repository)",
-  }
-  maps.n["<leader>gC"] = {
-    function() require("telescope.builtin").git_bcommits { use_file_path = true } end,
-    desc = "Git commits (current file)",
-  }
-  maps.n["<leader>gt"] =
-    { function() require("telescope.builtin").git_status { use_file_path = true } end, desc = "Git status" }
-  maps.n["<leader>f<CR>"] = { function() require("telescope.builtin").resume() end, desc = "Resume previous search" }
+  maps.n["<leader>fl"] = { function() require("telescope.builtin").resume() end, desc = "Resume previous search" }
   maps.n["<leader>f'"] = { function() require("telescope.builtin").marks() end, desc = "Find marks" }
   maps.n["<leader>f/"] =
     { function() require("telescope.builtin").current_buffer_fuzzy_find() end, desc = "Find words in current buffer" }
@@ -272,8 +260,8 @@ if is_available "telescope.nvim" then
     desc = "Find AstroNvim config files",
   }
   maps.n["<leader>fb"] = { function() require("telescope.builtin").buffers() end, desc = "Find buffers" }
-  maps.n["<leader>fc"] = { function() require("telescope.builtin").grep_string() end, desc = "Find word under cursor" }
-  maps.n["<leader>fC"] = { function() require("telescope.builtin").commands() end, desc = "Find commands" }
+  maps.n["<leader>fw"] = { function() require("telescope.builtin").grep_string() end, desc = "Find word under cursor" }
+  maps.n["<leader>fc"] = { function() require("telescope.builtin").commands() end, desc = "Find commands" }
   maps.n["<leader>ff"] = { function() require("telescope.builtin").find_files() end, desc = "Find files" }
   maps.n["<leader>fF"] = {
     function() require("telescope.builtin").find_files { hidden = true, no_ignore = true } end,
@@ -292,14 +280,13 @@ if is_available "telescope.nvim" then
   maps.n["<leader>fr"] = { function() require("telescope.builtin").registers() end, desc = "Find registers" }
   maps.n["<leader>ft"] =
     { function() require("telescope.builtin").colorscheme { enable_preview = true } end, desc = "Find themes" }
-  maps.n["<leader>fw"] = { function() require("telescope.builtin").live_grep() end, desc = "Find words" }
-  maps.n["<leader>fW"] = {
+  maps.n["<leader>fg"] = { function() require("telescope").extensions.live_grep_args.live_grep_args() end, desc = "Telescope live grep with args" }
+  maps.n["<leader>fG"] = { function() require("telescope-live-grep-args.shortcuts").grep_word_under_cursor() end, desc = "Start live grep with word under cursor" }
+  maps.n["<leader>fq"] = {
     function()
-      require("telescope.builtin").live_grep {
-        additional_args = function(args) return vim.list_extend(args, { "--hidden", "--no-ignore" }) end,
-      }
+      require("telescope").extensions.live_grep_args.live_grep_args({ search_dirs = require("astronvim.utils.quickfix").get_qf_files() })
     end,
-    desc = "Find words in all files",
+    desc = "Live grep quickfix list"
   }
   maps.n["<leader>l"] = sections.l
   maps.n["<leader>ls"] = {
@@ -313,6 +300,12 @@ if is_available "telescope.nvim" then
     end,
     desc = "Search symbols",
   }
+end
+
+-- Trouble
+if is_available "trouble.nvim" then
+  maps.n["<leader>x"] = sections.x
+  maps.n["<leader>xq"] = { ':cclose<cr>:Trouble quickfix<cr>', desc = "Pretty quickfix list" }
 end
 
 -- Terminal
