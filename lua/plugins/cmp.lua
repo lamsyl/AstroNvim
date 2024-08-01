@@ -71,6 +71,8 @@ return {
           completion = cmp.config.window.bordered(border_opts),
           documentation = cmp.config.window.bordered(border_opts),
         },
+        -- CTRL-I  trigger completion
+        -- CTRL-E  dismiss completion
         mapping = {
           ["<Up>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Select },
           ["<Down>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Select },
@@ -80,7 +82,7 @@ return {
           ["<C-j>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
           ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
           ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-          ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
+          ["<C-i>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
           ["<C-y>"] = cmp.config.disable,
           ["<C-e>"] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
           ["<CR>"] = cmp.mapping.confirm { select = false },
