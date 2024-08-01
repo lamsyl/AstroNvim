@@ -107,6 +107,11 @@ return {
     "akinsho/toggleterm.nvim",
     cmd = { "ToggleTerm", "TermExec" },
     opts = {
+      env = {
+        -- Avoid loading neovim-specific scripts when launching vim in toggleterm
+        VIM = "",
+        VIMRUNTIME = "",
+      },
       highlights = {
         Normal = { link = "Normal" },
         NormalNC = { link = "NormalNC" },
