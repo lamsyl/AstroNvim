@@ -20,16 +20,17 @@ local sections = {
   x = { desc = "Trouble" },
 }
 
--- Normal --
 -- Standard Operations
 maps.n["j"] = { "v:count == 0 ? 'gj' : 'j'", expr = true, desc = "Move cursor down" }
 maps.n["k"] = { "v:count == 0 ? 'gk' : 'k'", expr = true, desc = "Move cursor up" }
+maps.n["L"] = { 'zL', desc = "Scroll horizontally to the left" }
+maps.n["H"] = { 'zH', desc = "Scroll horizontally to the right" }
+maps.n["<leader>h"] = { '<cmd>noh<cr>', desc = "Clear highlight" }
 maps.n["<leader>w"] = { "<cmd>w<cr>", desc = "Save" }
+maps.n["<leader>W"] = { "<cmd>noautocmd w<cr>", desc = "Save without format" }
+maps.n["<leader>r"] = { "<cmd>e!<cr>", desc = "Reset buffer" }
 maps.n["<leader>q"] = { "<cmd>confirm q<cr>", desc = "Quit" }
-maps.n["<leader>Q"] = { "<cmd>confirm qall<cr>", desc = "Quit all" }
 maps.n["<leader>n"] = { "<cmd>enew<cr>", desc = "New File" }
-maps.n["<C-s>"] = { "<cmd>w!<cr>", desc = "Force write" }
-maps.n["<C-q>"] = { "<cmd>qa!<cr>", desc = "Force quit" }
 maps.n["|"] = { "<cmd>vsplit<cr>", desc = "Vertical Split" }
 maps.n["\\"] = { "<cmd>split<cr>", desc = "Horizontal Split" }
 -- TODO: Remove when dropping support for <Neovim v0.10
@@ -117,6 +118,11 @@ end
 maps.n["]t"] = { function() vim.cmd.tabnext() end, desc = "Next tab" }
 maps.n["[t"] = { function() vim.cmd.tabprevious() end, desc = "Previous tab" }
 
+-- Navigate diff
+-- remap built-in jumpto-diffs because the original mappings are used by Git Conflict
+maps.n["]D"] = { ']c', desc = "Next diff" }
+maps.n["[D"] = { '[c', desc = "Previous diff" }
+
 -- Alpha
 if is_available "alpha-nvim" then
   maps.n["<leader>h"] = {
@@ -148,16 +154,35 @@ if is_available "gitsigns.nvim" then
   maps.n["<leader>g"] = sections.g
   maps.n["]g"] = { function() require("gitsigns").next_hunk() end, desc = "Next Git hunk" }
   maps.n["[g"] = { function() require("gitsigns").prev_hunk() end, desc = "Previous Git hunk" }
-  maps.n["<leader>gl"] = { function() require("gitsigns").blame_line() end, desc = "View Git blame" }
-  maps.n["<leader>gL"] = { function() require("gitsigns").blame_line { full = true } end, desc = "View full Git blame" }
+  maps.n["<leader>gb"] = { function() require("gitsigns").blame_line() end, desc = "View Git blame" }
+  maps.n["<leader>gB"] = { function() require("gitsigns").blame_line { full = true } end, desc = "View full Git blame" }
   maps.n["<leader>gp"] = { function() require("gitsigns").preview_hunk() end, desc = "Preview Git hunk" }
-  maps.n["<leader>gh"] = { function() require("gitsigns").reset_hunk() end, desc = "Reset Git hunk" }
-  maps.n["<leader>gr"] = { function() require("gitsigns").reset_buffer() end, desc = "Reset Git buffer" }
+  maps.n["<leader>gr"] = { function() require("gitsigns").reset_hunk() end, desc = "Reset Git hunk" }
+  maps.n["<leader>gR"] = { function() require("gitsigns").reset_buffer() end, desc = "Reset Git buffer" }
   maps.n["<leader>gs"] = { function() require("gitsigns").stage_hunk() end, desc = "Stage Git hunk" }
   maps.n["<leader>gS"] = { function() require("gitsigns").stage_buffer() end, desc = "Stage Git buffer" }
   maps.n["<leader>gu"] = { function() require("gitsigns").undo_stage_hunk() end, desc = "Unstage Git hunk" }
   maps.n["<leader>gd"] = { function() require("gitsigns").diffthis() end, desc = "View Git diff" }
 end
+
+-- Git Conflict
+if is_available "git-conflict.nvim" then
+  maps.n["cC"] = { '<Plug>(git-conflict-ours)', desc = "Choose Current" }
+  maps.n["cI"] = { '<Plug>(git-conflict-theirs)', desc = "Choose Incoming" }
+  maps.n["cB"] = { '<Plug>(git-conflict-both)', desc = "Choose Both" }
+  maps.n["c0"] = { '<Plug>(git-conflict-none)', desc = "Choose None" }
+  maps.n["]c"] = { '<Plug>(git-conflict-next-conflict)', desc = "Next conflict" }
+  maps.n["[c"] = { '<Plug>(git-conflict-prev-conflict)', desc = "Previous conflict" }
+end
+
+-- Harpoon
+maps.n["<leader>A"] = { ':lua require("harpoon.mark").add_file()<cr>', desc = "Mark file" }
+maps.n["<leader>a"] = { ':lua require("harpoon.ui").toggle_quick_menu()<cr>', desc = "Toggle menu of marked files" }
+
+-- Oil
+--  <C-c>   Close oil and restore original buffer
+--  g?      Show default keymaps
+maps.n["-"] = { ':lua require("oil").open()<cr>', desc = "Add oil" }
 
 -- NeoTree
 if is_available "neo-tree.nvim" then
@@ -179,6 +204,7 @@ if is_available "neovim-session-manager" then
   maps.n["<leader>S"] = sections.S
   maps.n["<leader>Sl"] = { "<cmd>SessionManager! load_last_session<cr>", desc = "Load last session" }
   maps.n["<leader>Ss"] = { "<cmd>SessionManager! save_current_session<cr>", desc = "Save this session" }
+  maps.n["<leader>SS"] = { "<cmd>SessionManager! save_current_session<cr>", desc = "Save this session" }
   maps.n["<leader>Sd"] = { "<cmd>SessionManager! delete_session<cr>", desc = "Delete session" }
   maps.n["<leader>Sf"] = { "<cmd>SessionManager! load_session<cr>", desc = "Search sessions" }
   maps.n["<leader>S."] =
@@ -188,6 +214,7 @@ if is_available "resession.nvim" then
   maps.n["<leader>S"] = sections.S
   maps.n["<leader>Sl"] = { function() require("resession").load "Last Session" end, desc = "Load last session" }
   maps.n["<leader>Ss"] = { function() require("resession").save() end, desc = "Save this session" }
+  maps.n["<leader>SS"] = { function() require("resession").save() end, desc = "Save this session" }
   maps.n["<leader>St"] = { function() require("resession").save_tab() end, desc = "Save this tab's session" }
   maps.n["<leader>Sd"] = { function() require("resession").delete() end, desc = "Delete a session" }
   maps.n["<leader>Sf"] = { function() require("resession").load() end, desc = "Load a session" }
@@ -209,19 +236,19 @@ if is_available "smart-splits.nvim" then
   maps.n["<C-j>"] = { function() require("smart-splits").move_cursor_down() end, desc = "Move to below split" }
   maps.n["<C-k>"] = { function() require("smart-splits").move_cursor_up() end, desc = "Move to above split" }
   maps.n["<C-l>"] = { function() require("smart-splits").move_cursor_right() end, desc = "Move to right split" }
-  maps.n["<C-Up>"] = { function() require("smart-splits").resize_up() end, desc = "Resize split up" }
-  maps.n["<C-Down>"] = { function() require("smart-splits").resize_down() end, desc = "Resize split down" }
-  maps.n["<C-Left>"] = { function() require("smart-splits").resize_left() end, desc = "Resize split left" }
-  maps.n["<C-Right>"] = { function() require("smart-splits").resize_right() end, desc = "Resize split right" }
+  maps.n["<S-Up>"] = { function() require("smart-splits").resize_up() end, desc = "Resize split up" }
+  maps.n["<S-Down>"] = { function() require("smart-splits").resize_down() end, desc = "Resize split down" }
+  maps.n["<S-Left>"] = { function() require("smart-splits").resize_left() end, desc = "Resize split left" }
+  maps.n["<S-Right>"] = { function() require("smart-splits").resize_right() end, desc = "Resize split right" }
 else
   maps.n["<C-h>"] = { "<C-w>h", desc = "Move to left split" }
   maps.n["<C-j>"] = { "<C-w>j", desc = "Move to below split" }
   maps.n["<C-k>"] = { "<C-w>k", desc = "Move to above split" }
   maps.n["<C-l>"] = { "<C-w>l", desc = "Move to right split" }
-  maps.n["<C-Up>"] = { "<cmd>resize -2<CR>", desc = "Resize split up" }
-  maps.n["<C-Down>"] = { "<cmd>resize +2<CR>", desc = "Resize split down" }
-  maps.n["<C-Left>"] = { "<cmd>vertical resize -2<CR>", desc = "Resize split left" }
-  maps.n["<C-Right>"] = { "<cmd>vertical resize +2<CR>", desc = "Resize split right" }
+  maps.n["<S-Up>"] = { "<cmd>resize -2<CR>", desc = "Resize split up" }
+  maps.n["<S-Down>"] = { "<cmd>resize +2<CR>", desc = "Resize split down" }
+  maps.n["<S-Left>"] = { "<cmd>vertical resize -2<CR>", desc = "Resize split left" }
+  maps.n["<S-Right>"] = { "<cmd>vertical resize +2<CR>", desc = "Resize split right" }
 end
 
 -- Treesitter
@@ -327,26 +354,37 @@ if is_available "toggleterm.nvim" then
     maps.n["<leader>tl"] = maps.n["<leader>gg"]
   end
   if vim.fn.executable "node" == 1 then
-    maps.n["<leader>tn"] = { function() utils.toggle_term_cmd "node" end, desc = "ToggleTerm node" }
+    -- maps.n["<leader>tn"] = { function() utils.toggle_term_cmd "node" end, desc = "ToggleTerm node" }
   end
   local gdu = vim.fn.has "mac" == 1 and "gdu-go" or "gdu"
   if vim.fn.executable(gdu) == 1 then
-    maps.n["<leader>tu"] = { function() utils.toggle_term_cmd(gdu) end, desc = "ToggleTerm gdu" }
+    -- maps.n["<leader>tu"] = { function() utils.toggle_term_cmd(gdu) end, desc = "ToggleTerm gdu" }
   end
   if vim.fn.executable "btm" == 1 then
-    maps.n["<leader>tt"] = { function() utils.toggle_term_cmd "btm" end, desc = "ToggleTerm btm" }
+    maps.n["<leader>tp"] = { function() utils.toggle_term_cmd(python) end, desc = "ToggleTerm python" }
   end
   local python = vim.fn.executable "python" == 1 and "python" or vim.fn.executable "python3" == 1 and "python3"
-  if python then maps.n["<leader>tp"] = { function() utils.toggle_term_cmd(python) end, desc = "ToggleTerm python" } end
+  if python then
+    -- maps.n["<leader>tp"] = { function() utils.toggle_term_cmd(python) end, desc = "ToggleTerm python" }
+  end
   maps.n["<leader>tf"] = { "<cmd>ToggleTerm direction=float<cr>", desc = "ToggleTerm float" }
   maps.n["<leader>th"] = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", desc = "ToggleTerm horizontal split" }
   maps.n["<leader>tv"] = { "<cmd>ToggleTerm size=80 direction=vertical<cr>", desc = "ToggleTerm vertical split" }
   maps.n["<F7>"] = { '<Cmd>execute v:count . "ToggleTerm"<CR>', desc = "Toggle terminal" }
   maps.i["<F7>"] = { "<Esc>" .. maps.n["<F7>"][1], desc = maps.n["<F7>"].desc }
   maps.t["<F7>"] = { "<Cmd>ToggleTerm<CR>", desc = "Toggle terminal" }
-  maps.n["<C-'>"] = maps.n["<F7>"] -- requires terminal that supports binding <C-'>
-  maps.i["<C-'>"] = maps.i["<F7>"] -- requires terminal that supports binding <C-'>
-  maps.t["<C-'>"] = maps.t["<F7>"] -- requires terminal that supports binding <C-'>
+  -- <C-'>
+  maps.n["<C-'>"] = maps.n["<F7>"]
+  maps.i["<C-'>"] = maps.i["<F7>"]
+  maps.t["<C-'>"] = maps.t["<F7>"]
+  -- <C-`>
+  maps.n["<C-`>"] = maps.n["<F7>"]
+  maps.i["<C-`>"] = maps.i["<F7>"]
+  maps.t["<C-`>"] = maps.t["<F7>"]
+  -- <C-ESC>
+  maps.n["<C-ESC>"] = maps.n["<F7>"]
+  maps.i["<C-ESC>"] = maps.i["<F7>"]
+  maps.t["<C-ESC>"] = maps.t["<F7>"]
 end
 
 if is_available "nvim-dap" then
