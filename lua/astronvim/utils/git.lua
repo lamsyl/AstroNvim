@@ -8,6 +8,8 @@
 
 local git = { url = "https://github.com/" }
 
+local str_utils = require "astronvim.utils.string"
+
 local function trim_or_nil(str) return type(str) == "string" and vim.trim(str) or nil end
 
 --- Run a git command from the AstroNvim installation directory
@@ -210,6 +212,44 @@ function git.pretty_changelog(commits)
     end
   end
   return changelog
+end
+
+-- Tested on:
+-- Bitbucket - SSH URL
+--
+-- Assume remote name is `origin`
+-- The commit must be present in the remote
+function git.get_remote_url()
+  local url = "https://"
+
+  -- Append repo url
+  -- An HTTPS URL like https://[hostname]/user/repo.git
+  -- An SSH URL, like git@[hostname]:user/repo.git
+  local git_remote_output = vim.fn.system("git remote get-url origin")
+  if str_utils.startswith(git_remote_output, "https") then
+    print("An HTTPS URL - NOT YET IMPLEMENTED")
+    return
+  elseif str_utils.startswith(git_remote_output, "git") then
+    hostname, user, repo = string.match(git_remote_output, "git@([^:]+):([^/]+)/(.+)%.git")
+  else
+    print("Unknown URL")
+    return
+  end
+  url = url .. hostname .. "/" .. user .. "/" .. repo
+
+  -- Append commit
+  local git_commit_output = vim.fn.system("git rev-parse --short HEAD")
+  url = url .. "/src/" .. git_commit_output:gsub("\n$", "")
+
+  -- Append file path
+  url = url .. "/" .. vim.fn.expand("%:~:.")
+
+  -- Append row number
+  local row = vim.api.nvim_win_get_cursor(0)[1]
+  url = url .. "#lines-" .. row
+
+  print(url)
+  vim.fn.setreg("+", url)
 end
 
 return git

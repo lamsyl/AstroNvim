@@ -139,6 +139,4 @@ return {
       float_opts = { border = "rounded" },
     },
   },
-  { "ThePrimeagen/harpoon" },
-  { "stevearc/oil.nvim", config = true },
 }

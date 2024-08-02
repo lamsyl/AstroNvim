@@ -3,10 +3,12 @@ local utils = require "astronvim.utils"
 local get_icon = utils.get_icon
 local is_available = utils.is_available
 local ui = require "astronvim.utils.ui"
+local git = require "astronvim.utils.git"
 
 local maps = require("astronvim.utils").empty_map_table()
 
 local sections = {
+  -- with <leader>
   f = { desc = get_icon("Search", 1, true) .. "Find" },
   p = { desc = get_icon("Package", 1, true) .. "Packages" },
   l = { desc = get_icon("ActiveLSP", 1, true) .. "LSP" },
@@ -18,7 +20,11 @@ local sections = {
   S = { desc = get_icon("Session", 1, true) .. "Session" },
   t = { desc = get_icon("Terminal", 1, true) .. "Terminal" },
   x = { desc = "Trouble" },
+  -- without <leader>
+  cr = { desc = "Coerce" },
 }
+
+maps.n["cr"] = sections.cr
 
 -- Standard Operations
 maps.n["j"] = { "v:count == 0 ? 'gj' : 'j'", expr = true, desc = "Move cursor down" }
@@ -331,6 +337,13 @@ if is_available "telescope.nvim" then
     desc = "Search symbols",
   }
 end
+
+-- Copy Path
+maps.n["<leader>fp"] = { '<cmd>let @+ = expand("%:~:.")<cr>', desc = "Copy relative path to clipboard" }
+maps.n["<leader>fd"] = { '<cmd>let @+ = expand("%:~:.:h")<cr>', desc = "Copy relative directory to clipboard" }
+maps.n["<leader>fP"] = { '<cmd>let @+ = expand("%:p")<cr>', desc = "Copy full path to clipboard" }
+maps.n["<leader>fD"] = { '<cmd>let @+ = expand("%:p:h")<cr>', desc = "Copy full directory to clipboard" }
+maps.n["<leader>fu"] = { git.get_remote_url, desc = "Copy remote url to clipboard" }
 
 -- Trouble
 if is_available "trouble.nvim" then
