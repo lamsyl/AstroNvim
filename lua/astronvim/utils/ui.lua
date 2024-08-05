@@ -188,19 +188,18 @@ function M.set_indent(silent)
   end
 end
 
---- Change the number display modes
+-- Toggle between
+--   a. cursor line = line number , other = absolute number
+--   b. cursor line = 0           , other = relative number
 ---@param silent? boolean if true then don't sent a notification
 function M.change_number(silent)
-  local number = vim.wo.number -- local to window
   local relativenumber = vim.wo.relativenumber -- local to window
-  if not number and not relativenumber then
+  if relativenumber then
     vim.wo.number = true
-  elseif number and not relativenumber then
-    vim.wo.relativenumber = true
-  elseif number and relativenumber then
-    vim.wo.number = false
-  else -- not number and relativenumber
     vim.wo.relativenumber = false
+  else
+    vim.wo.number = false
+    vim.wo.relativenumber = true
   end
   ui_notify(
     silent,
