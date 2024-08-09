@@ -41,15 +41,16 @@ end
 --- Toggle diagnostics
 ---@param silent? boolean if true then don't sent a notification
 function M.toggle_diagnostics(silent)
-  vim.g.diagnostics_mode = (vim.g.diagnostics_mode - 1) % 4
-  vim.diagnostic.config(require("astronvim.utils.lsp").diagnostics[vim.g.diagnostics_mode])
+  local diagnostics = require("astronvim.utils.lsp").diagnostics
+  vim.g.diagnostics_mode = (vim.g.diagnostics_mode - 1) % (#diagnostics + 1)
+  vim.diagnostic.config(diagnostics[vim.g.diagnostics_mode])
   if vim.g.diagnostics_mode == 0 then
     ui_notify(silent, "diagnostics off")
-  elseif vim.g.diagnostics_mode == 1 then
-    ui_notify(silent, "only status diagnostics")
-  elseif vim.g.diagnostics_mode == 2 then
-    ui_notify(silent, "virtual text off")
-  else
+  -- elseif vim.g.diagnostics_mode == 1 then
+  --   ui_notify(silent, "only status diagnostics")
+  -- elseif vim.g.diagnostics_mode == 2 then
+  --   ui_notify(silent, "virtual text off")
+  else -- vim.g.diagnostics_mode == 1
     ui_notify(silent, "all diagnostics on")
   end
 end

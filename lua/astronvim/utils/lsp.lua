@@ -24,7 +24,7 @@ local setup_handlers = user_opts("lsp.setup_handlers", {
   function(server, opts) require("lspconfig")[server].setup(opts) end,
 })
 
-M.diagnostics = { [0] = {}, {}, {}, {} }
+M.diagnostics = { [0] = {}, {} }
 
 M.setup_diagnostics = function(signs)
   local default_diagnostics = astronvim.user_opts("diagnostics", {
@@ -57,9 +57,9 @@ M.setup_diagnostics = function(signs)
       { underline = false, virtual_text = false, signs = false, update_in_insert = false }
     ),
     -- status only
-    extend_tbl(default_diagnostics, { virtual_text = false, signs = false }),
+    -- extend_tbl(default_diagnostics, { virtual_text = false, signs = false }),
     -- virtual text off, signs on
-    extend_tbl(default_diagnostics, { virtual_text = false }),
+    -- extend_tbl(default_diagnostics, { virtual_text = false }),
     -- all diagnostics on
     default_diagnostics,
   }
