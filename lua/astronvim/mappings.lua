@@ -191,12 +191,16 @@ if is_available "neo-tree.nvim" then
   }
 end
 
+local function save_session()
+  vim.cmd("SessionManager! save_current_session")
+  utils.notify("Session saved")
+end
+
 -- Session Manager
 if is_available "neovim-session-manager" then
   maps.n["<leader>S"] = sections.S
   maps.n["<leader>Sl"] = { "<cmd>SessionManager! load_last_session<cr>", desc = "Load last session" }
-  maps.n["<leader>Ss"] = { "<cmd>SessionManager! save_current_session<cr>", desc = "Save this session" }
-  maps.n["<leader>SS"] = { "<cmd>SessionManager! save_current_session<cr>", desc = "Save this session" }
+  maps.n["<leader>SS"] = { save_session, desc = "Save this session" }
   maps.n["<leader>Sd"] = { "<cmd>SessionManager! delete_session<cr>", desc = "Delete session" }
   maps.n["<leader>Sf"] = { "<cmd>SessionManager! load_session<cr>", desc = "Search sessions" }
   maps.n["<leader>S."] =
